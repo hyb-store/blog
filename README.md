@@ -288,9 +288,7 @@ JWT的构成：头部（header),载荷（payload)，签证（signature).
 - header：
        声明类型，这里是jwt
        声明加密的算法 通常直接使用 HMAC SHA256
-
--  playload：
-
+- playload：
   - 标准中注册的声明：
     - iss: jwt签发者
     -  sub: jwt所面向的用户
@@ -299,12 +297,10 @@ JWT的构成：头部（header),载荷（payload)，签证（signature).
     - nbf: 定义在什么时间之前，该jwt都是不可用的.
     - iat: jwt的签发时间
     -  jti: jwt的唯一身份标识，主要用来作为一次性token,从而回避重放攻击。
-
   - 公共的声明：公共的声明可以添加任何的信息，一般添加用户的相关信息或其他业务需要的必要信息.该部分在客户端可解密.
   - 私有的声明：私有声明是提供者和消费者所共同定义的声明，一般不建议存放敏感信息，因为base64是对称解密的，意味着该部分信息可以归类为明文信息。
 
 -  signature：这个部分需要base64加密后的header和payload使用`.`连接组成的字符串，然后通过header中声明的加密方式进行加盐secret组合加密，然后就构成了jwt的第三部分
-
   - header (base64后的)
   - payload (base64后的)
   - secret:它就是你服务端的私钥，在任何场景都不应该流露出去。一旦客户端得知这个secret, 那就意味着客户端是可以自我签发jwt了
