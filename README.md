@@ -468,13 +468,9 @@ public class JWTInterceptor implements HandlerInterceptor {
 
 1.页面接在很慢
 
-F12后发现，时间浪费在https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin上，
+F12后发现，时间浪费在https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin上，这是个谷歌字体，服务器在外国，请求半天最终结果是无法访问；
 
-这个谷歌字体，服务器在外国，请求半天最终结果是无法访问；解决办法，将字体下载到本地，将senamtic.min.css也下载到本地。
+解决办法：将字体下载到本地，将senamtic.min.css也下载到本地。
 
 
-
-type页面没有显示全部type？
-
-缓存中只有一部分，没有去查数据库
 
