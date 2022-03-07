@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<nav class="ui inverted attached segment m-padded-tb-mini m-shadow-small" th:fragment="admintopbar" style="position: relative; z-index: 99 !important;">
+    <div class="ui container">
+        <div class="ui inverted secondary stackable menu">
+            <h2 class="ui teal header item">后台管理</h2>
+            <a href="#" th:href="@{/admin/blogs}" class="m-item item m-mobile-hide" th:class="${activeUri=='blog'?'active m-item item m-mobile-hide':'m-item item m-mobile-hide'}"><i class="home icon"></i>博客</a>
+            <a href="#" th:href="@{/admin/types}" class="m-item item m-mobile-hide" th:class="${activeUri=='type'?'active m-item item m-mobile-hide':'m-item item m-mobile-hide'}"><i class="tags icon"></i>分类</a>
+            <div class="right m-item item m-mobile-hide menu">
+                <div class="ui dropdown item">
+                    <div class="text">
+                        <img src="https://unsplash.it/100/100?image=1005" th:src="${session.user.avatar}" class="ui avatar image">
+                        <span th:text="${session.user.username}"></span>
+                    </div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <a href="#" th:href="@{/admin/logout}" class="item">注销</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+        <i class="sidebar icon"></i>
+    </a>
+</nav>
+
+<!--导航 top bar-->
+<nav class="ui inverted attached segment m-padded-tb-mini m-shadow-small" th:fragment="topbar">
+    <div class="ui container">
+        <div class="ui inverted secondary stackable menu"> <!--stackable手机移动端相应，屏幕小时会将内容堆叠到一起-->
+            <h2 class="ui teal header item">Blog</h2>
+            <a href="#" th:href="@{/index}" class="m-item item m-mobile-hide" th:class="${activeUri=='index'?'active m-item item m-mobile-hide':'m-item item m-mobile-hide'}"><i class="home icon"></i>首页</a>
+            <a href="#" th:href="@{/types/-1}" class="m-item item m-mobile-hide" th:class="${activeUri=='types'?'active m-item item m-mobile-hide':'m-item item m-mobile-hide'}"><i class="tags icon"></i>分类</a>
+            <a href="#" th:href="@{/archives}" class="m-item item m-mobile-hide" th:class="${activeUri=='archives'?'active m-item item m-mobile-hide':'m-item item m-mobile-hide'}"><i class="clone icon"></i>归档</a>
+            <a href="#" th:href="@{/about}" class="m-item item m-mobile-hide" th:class="${activeUri=='about'?'active m-item item m-mobile-hide':'m-item item m-mobile-hide'}"><i class="info icon"></i>关于我</a>
+            <div class="right m-item item m-mobile-hide">
+                <form name="search" action="#" th:action="@{/search}" method="post" target="_blank">
+                    <div class="ui icon inverted input m-margin-tb-tiny">
+                        <input type="text" name="query" placeholder="搜索" th:value="${query}">
+                        <i onclick="document.forms['search'].submit()" class="search icon link"></i>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+        <i class="sidebar icon"></i>
+    </a>
+</nav>
+
+<!--底部footer-->
+<footer class="ui inverted vertical segment m-padded-tb-massive" th:fragment="footerbar">
+    <div class="ui center aligned container">
+        <div class="ui inverted divided stackable grid">
+            <div class="three wide column">
+                <div class="ui inverted link list">
+                    <div class="item">
+                        <img th:src="@{/images/MyWeChat.png}" alt="" class="ui rounded inverted image"
+                             style="width: 110px;height: 110px;">
+                    </div>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="m-text-thin m-text-spaced">最新博客</h4>
+                <div id="new-blog-container">
+                    <div class="ui inverted link list m-text-thin m-text-spaced m-opacity-mini" th:fragment="newBlogList" th:each="blog : ${newBlogs}">
+                        <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank" class="item" th:text="${blog.title}">用户故事(User Story)</a>
+                    </div>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="m-text-thin m-text-spaced">联系我</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="item">Email:<span th:text="#{index.email}">3063687049@qq.com</span></a>
+                    <a href="#" class="item">QQ:<span th:text="#{index.qq}">3063687049</span></a>
+                </div>
+            </div>
+            <div class="seven wide column">
+                <h4 class="m-text-thin m-text-spaced">Blog</h4>
+                <p class="m-text-thin m-text-spaced m-opacity-mini">
+                    这是一个个人博客、会分享关于编程、写作、思考相关的内容，希望可以给来到这的人有所帮助...</p>
+            </div>
+        </div>
+        <div class="ui inverted section divider">
+            <p class="m-text-thin m-text-spaced m-opacity-tiny" style="padding-top: 40px">
+                Copyright @ 2021-2022 KXY Designed by KXY
+            </p>
+        </div>
+    </div>
+</footer>
+
+</body>

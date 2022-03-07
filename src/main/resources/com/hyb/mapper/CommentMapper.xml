@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hyb.mapper.CommentMapper">
+    <resultMap id="commentMap" type="com.hyb.pojo.Comment">
+        <id property="id" column="id"></id>
+        <result property="nickname" column="nickname"></result>
+        <result property="content" column="content"></result>
+        <result property="avatar" column="avatar"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="blog.id" column="blog_id"></result>
+        <result property="parentComment.id" column="parent_comment_id"></result>
+        <result property="isAdminComment" column="is_admin_comment"></result>
+    </resultMap>
+
+    <select id="selectOne" parameterType="Long" resultMap="commentMap">
+        select id, nickname, content, avatar, create_time, blog_id, parent_comment_id, is_admin_comment from t_comment where id = #{id}
+    </select>
+
+    <select id="selectListByBlog" parameterType="Long" resultMap="commentMap">
+        select id, nickname, content, avatar, create_time, blog_id, parent_comment_id, is_admin_comment from t_comment where blog_id = #{blogId} and parent_comment_id is null order by UNIX_TIMESTAMP(`create_time`) asc
+    </select>
+
+    <select id="selectListReply" resultMap="commentMap">
+        select id, nickname, content, avatar, create_time, blog_id, parent_comment_id, is_admin_comment from t_comment where parent_comment_id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.hyb.pojo.Comment">
+        insert into t_comment(nickname, content, avatar, create_time, blog_id, parent_comment_id, is_admin_comment) values(#{nickname}, #{content}, #{avatar}, #{createTime}, #{blog.id}, #{parentComment.id}, #{isAdminComment})
+    </insert>
+</mapper>

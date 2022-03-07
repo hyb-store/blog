@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hyb.mapper.BlogMapper">
+
+    <resultMap id="blogToTypeAndUserMap" type="com.hyb.pojo.Blog">
+        <id property="id" column="id"></id>
+        <result property="appreciation" column="appreciation"></result>
+        <result property="shareStatement" column="share_statement"></result>
+        <result property="commentAble" column="comment_able"></result>
+        <result property="content" column="content"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="firstPicture" column="first_picture"></result>
+        <result property="flag" column="flag"></result>
+        <result property="published" column="published"></result>
+        <result property="recommend" column="recommend"></result>
+        <result property="title" column="title"></result>
+        <result property="updateTime" column="update_time"></result>
+        <result property="views" column="views"></result>
+        <result property="description" column="description"></result>
+
+        <association property="type" javaType="com.hyb.pojo.Type"><!--一对一-->
+            <id property="id" column="type_id"></id>
+            <result property="name" column="name"></result>
+        </association>
+
+        <association property="user" javaType="com.hyb.pojo.User"><!--一对一-->
+            <id property="id" column="user_id"></id>
+            <result property="username" column="username"></result>
+            <result property="avatar" column="avatar"></result>
+        </association>
+    </resultMap>
+
+    <select id="selectOneById" resultMap="blogToTypeAndUserMap">
+        select b.*, t.*, u.id, u.username, u.avatar from t_blog b left join t_type t on b.type_id = t.id left JOIN t_user u on u.id = b.user_id where b.`id` = #{id}
+    </select>
+
+    <select id="selectOneByTitle" resultMap="blogToTypeAndUserMap">
+        select b.*, t.*, u.id, u.username, u.avatar from t_blog b left join t_type t on b.type_id = t.id left JOIN t_user u on u.id = b.user_id where b.`title` = #{title}
+    </select>
+
+    <select id="selectList" resultMap="blogToTypeAndUserMap">
+         select b.*, t.*, u.id, u.username, u.avatar from t_blog b left join t_type t on b.type_id = t.id left JOIN t_user u on u.id = b.user_id
+    </select>
+
+    <select id="selectListByUpdateTime" resultMap="blogToTypeAndUserMap" parameterType="Integer">
+        select * from t_blog where `published` = 1 and `recommend` = 1 ORDER BY  UNIX_TIMESTAMP(`update_time`) desc limit 0, #{size};  <!--UNIX_TIMESTAMP() 转换为时间戳-->
+    </select>
+
+    <select id="selectListConditional" resultMap="blogToTypeAndUserMap">
+        select b.*, t.*, u.id, u.username, u.avatar from t_blog b left join t_type t on b.type_id = t.id left JOIN t_user u on u.id = b.user_id where `published` = 1 and (b.title = #{query} or t.name = #{query} or b.content like concat('%', #{query}, '%'))
+    </select>
+
+    <select id="selectListMultipleConditional" resultMap="blogToTypeAndUserMap">
+        select * from `t_blog` b left join `t_type` t on b.`type_id` = t.id left JOIN t_user u on u.id = b.user_id
+        <where>
+            <if test="title != null and title != ''">
+                and b.`title` = #{title}
+            </if>
+            <if test="typeId != null and typeId != 0L">
+                and b.`type_id` = #{typeId}
+            </if>
+            and b.`recommend` = #{recommend}
+        </where> order by b.id desc
+    </select>
+
+    <select id="selectListYear" resultType="String">
+        select date_format(create_time, '%Y') as year from t_blog group by year order by year desc;
+    </select>
+
+    <select id="selectListByYear" parameterType="String" resultMap="blogToTypeAndUserMap">
+        select id, create_time, flag, title from t_blog where date_format(create_time, '%Y') = #{year} and `published` = 1 order by UNIX_TIMESTAMP(`create_time`) desc
+    </select>
+
+    <update id="update" parameterType="com.hyb.pojo.Blog">
+        update t_blog set `appreciation` = #{appreciation}, `comment_able` = #{commentAble}, `content` = #{content},
+        `first_picture` = #{firstPicture}, `flag` = #{flag}, `published` = #{published}, `recommend` = #{recommend}, `share_statement` = #{shareStatement},
+        `title` = #{title}, `update_time` = #{updateTime}, `type_id` = #{type.id}, `description` = #{description} where `id` = #{id};
+    </update>
+
+    <update id="updateViews" parameterType="Long">
+        update t_blog set `views` = views+1 where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        delete from t_blog where `id` = #{id};
+    </delete>
+
+    <insert id="insert" parameterType="com.hyb.pojo.Blog">
+        insert into t_blog(`appreciation`, `comment_able`, `content`, `create_time`, `first_picture`, `flag`, `published`, `recommend`, `share_statement`, `title`, `update_time`, `views`, `type_id`, `user_id`, `description`)
+        values(#{appreciation}, #{commentAble}, #{content}, #{createTime}, #{firstPicture}, #{flag}, #{published}, #{recommend}, #{shareStatement}, #{title}, #{updateTime}, #{views}, #{type.id}, #{user.id}, #{description});
+    </insert>
+</mapper>

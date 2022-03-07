@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hyb.mapper.TypeMapper">
+
+    <resultMap id="typeToBlogsMap" type="com.hyb.pojo.Type">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <!--
+        property="blogs":指定这是哪个集合属性
+        ofType:指定集合内封装的JavaBean类型(集合内装的什么)
+        -->
+        <collection property="blogs" ofType="com.hyb.pojo.Blog"><!-- 一对多 -->
+            <result property="title" column="title"></result>
+            <result property="type.id" column="type_id"></result>
+            <result property="published" column="published"></result>
+        </collection>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hyb.pojo.Type">
+        insert into t_type(name) values(#{name});
+    </insert>
+
+    <select id="selectListAndBlog" resultMap="typeToBlogsMap">
+        select t.id, t.name, b.title, b.type_id from t_type t left join t_blog b on t.id = b.type_id where b.published = 1;
+    </select>
+
+    <select id="selectList" resultType="com.hyb.pojo.Type">
+        select `id`, `name` from t_type
+    </select>
+
+    <select id="selectOneById" parameterType="Long" resultType="com.hyb.pojo.Type">
+        select `id`, `name` from t_type where `id` = #{id};
+    </select>
+
+    <select id="selectOneByName" resultType="com.hyb.pojo.Type">
+        select `id`, `name` from t_type where `name` = #{name};
+    </select>
+
+    <update id="update" parameterType="com.hyb.pojo.Type">
+        update `t_type` set `name` = #{name} where `id` = #{id};
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        delete from `t_type` where `id` = #{id};
+    </delete>
+
+</mapper>

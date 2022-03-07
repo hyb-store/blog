@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>分类管理</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" th:href="@{/css/semantic.min.css}">
+    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+    <link rel="icon" th:href="@{/images/favicon.ico}">
+</head>
+<div>
+
+    <!--导航-->
+    <div th:replace="commons/bar::admintopbar(activeUri='type')"></div>
+
+    <div class="ui attached pointing menu">
+        <div class="ui container">
+            <div class="right menu">
+                <a href="#" th:href="@{/admin/types/input}" class="item">新增</a>
+                <a href="#" th:href="@{/admin/types}" class="teal active item">列表</a>
+            </div>
+        </div>
+    </div>
+
+    <!--中间内容-->
+    <div class="m-container-small m-padded-tb-big">
+        <div class="ui container">
+            <div class="ui success message" th:unless="${#strings.isEmpty(successMsg)}">
+                <i class="close icon"></i>
+                <div class="header">提示：</div>
+                <p th:text="${successMsg}"></p>
+            </div>
+            <div class="ui error message" th:unless="${#strings.isEmpty(errMsg)}">
+                <i class="close icon"></i>
+                <div class="header">提示：</div>
+                <p th:text="${errMsg}"></p>
+            </div>
+            <!--表格-->
+            <table class="ui celled table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>分类名称</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="type,iterStat : ${pageInfo.list}">
+                        <td th:text="${iterStat.count}">1</td>
+                        <td th:text="${type.name}">刻意练习</td>
+                        <td>
+                            <a href="#" th:href="@{/admin/types/}+${type.id}" class="ui mini teal basic button">编辑</a>
+                            <a href="#" th:attr="del-uri=@{/admin/types/}+${type.id}" class="ui mini red basic button delete-btn">删除</a>
+                        </td>
+                    </tr>
+
+                    <form id="del-type" method="post">
+                        <input type="hidden" name="_method" value="delete">
+                    </form>
+
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="6">
+                            <div class="ui mini pagination menu"  th:if="${pageInfo.pages}>1">
+                                <a class="item" th:href="@{/admin/types(page=${pageInfo.pageNum-1})}" th:unless="${pageInfo.isFirstPage}">上一页</a>
+                                <a class="item" th:href="@{/admin/types(page=${pageInfo.pageNum+1})}" th:unless="${pageInfo.isLastPage}">下一页</a>
+                            </div>
+                            <a href="" th:href="@{/admin/types/input}" class="ui mini right floated teal basic button">新增</a>
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<!--底部footer-->
+<div th:replace="commons/bar::footerbar"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js" th:src="@{/js/semantic.min.js}"></script>
+<script>
+    $('#new-blog-container').load(/*[[@{/footer/newBlog}]]*/"/footer/newBlog");
+</script>
+<script>
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+    $('.ui.dropdown').dropdown({
+        on: 'hover' //设置为鼠标移动到指定点触发显示
+    });
+    //$('.ui.dropdown').dropdown();//默认点击显示
+</script>
+<script>
+    $(".delete-btn").click(function () {
+        $("#del-type").attr("action", $(this).attr("del-uri")).submit();
+    });
+
+    //消息提交关闭
+    $('.message .close').on('click', function () {
+        $(this).closest('.message').transition('fade');
+    });
+</script>
+</body>
+</html>
