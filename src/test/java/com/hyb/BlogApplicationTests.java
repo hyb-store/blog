@@ -7,11 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
+
 @SpringBootTest
 class BlogApplicationTests {
 
     @Autowired
     private RedisUtils redisUtils;
+
+    @Autowired
+    private DataSource dataSource;
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
@@ -31,6 +37,11 @@ class BlogApplicationTests {
     void contextLoads3() {
         System.out.println(MD5Utils.string2MD5("123456"));
         System.out.println(!"123456".equals(MD5Utils.string2MD5("e10adc3949ba59abbe56e057f20f883e")));
+        try {
+            System.out.println(dataSource.getConnection());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
 }

@@ -29,6 +29,6 @@ pagehelper:
   params: countSql #用于从对象中根据属性名取值
 logging:
   level:
-    com.yiqiandewo.mapper: debug  # 控制台打印sql
+    com.hyb.mapper: debug  # 控制台打印sql
 
 comment.avatar: https://s2.loli.net/2022/03/06/9L1fvzXHtyGuU7E.jpg
